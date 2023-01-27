@@ -54,8 +54,36 @@ def hello(subject):
 #                 Position: (<insert x>, <insert y>)
 # 
 
-# In[ ]:
+# In[ ]: 
 
+class Bug:
+
+    def __init__(self, name, position = [0,0]):
+        self.name = name
+        self.position = position
+    
+    def move_up(self, units):
+        x = self.position()[0]
+        y = self.position()[1]
+        self.position = [x, y+units]
+
+    def move_down(self, units):
+        x = self.position()[0]
+        y = self.position()[1]
+        self.position = [x, y-units]
+
+    def move_left(self, units):
+        x = self.position()[0]
+        y = self.position()[1]
+        self.position = [x-units, y]
+
+    def move_right(self, units):
+        x = self.position()[0]
+        y = self.position()[1]
+        self.position = [x+units, y]
+    
+    def __str__(self):
+        print("Name: " + self.name + "\nPosition: " + str(self.position))
 
 
 
