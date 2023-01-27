@@ -83,7 +83,7 @@ class Bug:
         self.position = [x+units, y]
     
     def __str__(self):
-        print("Name: " + self.name + "\nPosition: " + str(self.position))
+        return "Name: " + self.name + "\nPosition: " + str(self.position)
 
 
 
