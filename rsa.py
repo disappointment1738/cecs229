@@ -1,4 +1,6 @@
-# helper functions
+import time
+
+# Helper functions
 
 def letters2digits(letters):
   digits = ""
@@ -20,6 +22,13 @@ def digits2letters(digits):
     letters += chr(int(digit) + 65)  # concatenating to the string of letters
     start += 2  # updating the starting index for next digit
   return letters
+
+def blocksize(n):
+    """returns the size of a block in an RSA encrypted string"""
+    twofive = "25"
+    while int(twofive) < n:
+        twofive += "25"
+    return len(twofive) - 2
 
 def bezout_coeffs(a, b):
   """that computes the Bezout coefficients s and t of a and b.
@@ -76,6 +85,23 @@ def modinv(a, m):
             inverse -= m
     return inverse
 
+def mod_exp(b, n, m):
+    """
+    this function computes b^n mod m
+    param@ base (b), exponent (n), modulo (m)
+    returns an int as result
+    """
+    if b < 0 or n < 0 or m < 0:
+        return 0
+    nBinary = bin(n)[2:]
+    x = 1
+    p = b % m
+    for i in range(len(nBinary)-1, -1, -1):
+        if int(nBinary[i]) == 1:
+            x = (x * p) % m 
+        p = (p * p) % m
+    return x
+
 # RSA 
 
 def encryptRSA(message, n, e):
@@ -86,8 +112,34 @@ def encryptRSA(message, n, e):
             
     OUTPUT: The encrypted message as a string of digits
     """
-    # todo
-    pass
+    # find the blocksize, size
+    size = blocksize(n)
+    # create a list of the blocks and for encrypted blocks
+    blocks = []
+    encrypted = []
+    # convert text to digits
+    digits = letters2digits(message)
+    # when len(digits) doesn't divide size, then we need to pad the message with "X" (or "23")
+    while len(digits) % size != 0:
+      digits += "23"
+    # seperate the message into the blocksize
+    for i in range(0, len(digits), size):
+      blocks.append(digits[i:i+size])
+    # now we want to encrypt every block
+    for c in blocks:
+      newBlock = str(mod_exp(int(c), e, n)) # RSA encryption function
+      # make sure the new block has the len of blocksize
+      newBlock = newBlock.zfill(size)
+      # add this block to the list of encrypted blocks 
+      encrypted.append(newBlock)
+    # join the blocks together into a string 
+    encryptedDigits = " ".join(encrypted)
+    # return the result (encryptedDigits)
+    return encryptedDigits
+
+# test (see lecture 6 for examples)
+# encryptRSA("STOP", 2537, 13) # works 
+# encryptRSA("UPLOADS", 3233, 17) # works 
     
 def decryptRSA(cipher, p, q, e):
     """decrypts cipher, which was encrypted using the key (p * q, e)
@@ -97,6 +149,46 @@ def decryptRSA(cipher, p, q, e):
             
     OUTPUT: The decrypted message as a string of letters
     """
-    # todo
-    pass
+    # find the inverse where e-bar is the inverse of e mod (p-1)(q-1)
+    inverse = modinv(e, (p-1)*(q-1))
+    # get rid of spaces in cipher
+    cipher = cipher.replace(" ","")
+    # find the blocksize, size
+    size = blocksize(p*q)
+    # create a list of the blocks and for encrypted blocks
+    blocks = []
+    decrypted = []
+    # when len(cipher) doesn't divide size, then we need to pad the message with "X" (or "23")
+    while len(cipher) % size != 0:
+      cipher += "23"
+    # seperate the message into the blocksize
+    for i in range(0, len(cipher), size):
+      blocks.append(cipher[i:i+size])
+    # now we want to encrypt every block
+    for c in blocks:
+      newBlock = str(mod_exp(int(c), inverse, p*q)) # RSA decryption function
+      # make sure the new block has the len of blocksize
+      newBlock = newBlock.zfill(size)
+      # add this block to the list of encrypted blocks 
+      decrypted.append(newBlock)
+    # join the blocks together into a string 
+    decryptedDigits = "".join(decrypted)
+    # convert digits into plaintext
+    plaintext = digits2letters(decryptedDigits)
+    return plaintext
 
+"""--------------------- TESTER CELL ---------------------------"""
+decrypted1 = decryptRSA("2081 2182", 43, 59, 13)
+decrypted2 = decryptRSA("0981 0461", 43, 59, 13)
+decrypted3 = decryptRSA("2081 2182 1346", 43, 59, 13)
+print("Decrypted Message:", decrypted1)
+print("Expected: STOP")
+print("Decrypted Message:", decrypted2)
+print("Expected: HELP")
+print("Decrypted Message:", decrypted3)
+print("Expected: STOPSX")
+
+"""--------------------- TEST 2---------------------------"""
+decrypted = decryptRSA("0667 1947 0671", 43, 59, 13)
+print("Decrypted Message:", decrypted)
+print("Expected: SILVER")
