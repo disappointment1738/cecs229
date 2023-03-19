@@ -1,2 +1,2 @@
-# cecs229
-cecs 229 for csulb (spring 2023)
+
+### You'll probably have a stroke trying to read all of my files... because I do.
