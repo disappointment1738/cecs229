@@ -1,4 +1,4 @@
-import Vec from pa4
+from pa4 import Vec
 
 """
 implement setters and getter functions for Matrix class
@@ -21,8 +21,6 @@ class Matrix:
     def __sub__(self, other):
         pass # todo: REPLACE WITH IMPLEMENTATION
     
-    # FUNCTIONS THAT DONT NEED EDITING
-    
     def __mul__(self, other):  
         if type(other) == float or type(other) == int:
             print("FIXME: Insert implementation of MATRIX-SCALAR multiplication")  # todo
@@ -41,6 +39,8 @@ class Matrix:
             print("ERROR: Unsupported Type.")
         return
     
+    # no edits here
+
     def __str__(self):
         """prints the rows and columns in matrix form """
         mat_str = ""
