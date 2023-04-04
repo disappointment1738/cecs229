@@ -45,6 +45,22 @@ class Matrix:
             print("ERROR: Unsupported Type.")
         return
     
+
+    # SETTERS
+
+    def set_col(self, j, u):
+        """changes column j to the u list"""
+        pass
+
+    def set_row(self, i, v):
+        """changes row i to the v list"""
+        pass
+
+    def set_entry(self, i, j, x):
+        """changes ij-th entry in the matrix to x"""
+        pass
+
+
     # GETTERS
 
     def get_col(self, j):
