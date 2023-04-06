@@ -13,11 +13,10 @@ class Matrix:
     # FIX THIS
     def _construct_cols(self, rowsp):
         colsp = []
-        col = []
-        for row in rowsp:
-            for i in range(2):
-                for j in range(2):
-                    col.append(rowsp[i][j])
+        for i in range(len(rowsp[0])):
+            col = []
+            for j in range(len(rowsp)):
+                col.append(rowsp[j][i])
             colsp.append(col)
         return colsp
            
@@ -108,6 +107,8 @@ class Matrix:
 
 
 A = Matrix([[1, 2, 3], [4, 5, 6]]) 
+print("Original Row Space:", A.row_space()) 
+print("Original Column Space:", A.col_space())
 print("Original Matrix:")
 print(A)
 print()
