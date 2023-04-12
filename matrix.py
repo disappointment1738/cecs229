@@ -80,7 +80,7 @@ class Matrix:
                 newRowSp = []
                 for i in range(len(self.rowsp)):
                     newRow = []
-                    for j in range(len(other.colsp[0])):
+                    for j in range(len(other.colsp)):
                         # we can use the rows of A and the columns of B - dot product from Vec
                         product = Vec(self.rowsp[i]) * Vec(other.colsp[j])
                         newRow.append(product)
@@ -97,7 +97,7 @@ class Matrix:
                     product = Vec(self.rowsp[i]) * other
                     # add the new row to the new row space
                     newVec.append(product)
-            return newVec
+            return Vec(newVec)
         else:
             print("ERROR: Unsupported Type.")
         return
@@ -216,37 +216,18 @@ class Matrix:
 A = Matrix([[1, 2, 3], [4, 5, 6]]) 
 print("\nThe setters and getters work as expected.")
 print("get_diag() works as expected.")
-print("Addition and substraction work as expected.\n")
+print("Addition and substraction work as expected.")
+print('All multiplications, except MATRIX-MATRIX, work.\n')
 
 
-# "TESTING OPERATOR + "
-# A = Matrix([[1, 2],[3, 4],[5, 6]])
-# B = Matrix([[1, 2],[1, 2]])
-# C = Matrix([[10, 20],[30, 40],[50, 60]])
-# # P = A + B # dimension mismatch --> raises error as intended
-# Q = A + C
-# R = A - C
+A = Matrix([[1, 2],[3, 4],[5, 6]])
+B = Matrix([[1, 2],[1, 2]])
+C = Matrix([[10, 20],[30, 40],[50, 60]])
+D = Matrix( [[-7, 2, -5, -1], [-2, 6, -9, 9], [-4, 4, 4, -5]] )
+E = Matrix( [ [-8, -1, 0, 3, 0], [-5, 2, 3, 5, -5], [4, -8, 8, -1, 1], [-4, -10, 2, -7, 10] ] )
 
-
-# "TESTING OPERATOR * "
-# # TESTING SCALAR-MATRIX MULTIPLICATION
-# T = -0.5 * B 
-# print("Matrix B") 
-# print(B)
-# print()
-
-# print("Matrix T = -0.5 * B")
-# print(T)
-# print()
-
-# # TESTING MATRIX-MATRIX MULTIPLICATION
-# U = A * B
-# print("Matrix U = A * B") 
-# print(U)
-# print()
-
-# # TESTING MATRIX-VECTOR MULTIPLICATION 
-# x = Vec([0, 1]) # Vec object
-# b = A * x # b is a Vec data type 
-# print("Vector b = A * x")
-# print(b)
+# TESTING MATRIX-MATRIX MULTIPLICATION
+U = D * E
+print("Matrix U = A * B") 
+print(U)
+print()
