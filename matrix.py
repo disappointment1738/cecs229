@@ -1,4 +1,5 @@
 from pa4 import Vec
+# from Vec import Vec
 
 """
 implement setters and getter functions for Matrix class
@@ -10,7 +11,6 @@ class Matrix:
         self.rowsp = rowsp
         self.colsp = self._construct_cols(rowsp)
         
-    # Review later
     def _construct_cols(self, rowsp):
         colsp = []
         for i in range(len(rowsp[0])):
@@ -21,39 +21,84 @@ class Matrix:
         return colsp
            
     def __add__(self, other):
-        pass # todo: REPLACE WITH IMPLEMENTATION
+        # check if matrix dimensions are valid
+        if len(self.rowsp) != len(other.rowsp) or len(self.colsp) != len(other.colsp):
+            raise ValueError("ERROR: Product is undefined.")
+        else:
+            newRowSp = []
+            # iterate through the rows of the matrices
+            for i in range(len(self.rowsp)):
+                newRow = []
+                sum = 0
+                for j in range(len(self.rowsp[0])):
+                    # add the components of self and other together 
+                    sum = self.rowsp[i][j] + other.rowsp[i][j]
+                    newRow.append(sum)
+                newRowSp.append(newRow)
+        return Matrix(newRowSp)
     
     def __sub__(self, other):
-        pass # todo: REPLACE WITH IMPLEMENTATION
+        # check if matrix dimensions are valid
+        if len(self.rowsp) != len(other.rowsp) or len(self.colsp) != len(other.colsp):
+            raise ValueError("ERROR: Product is undefined.")
+        else:
+            newRowSp = []
+            # iterate through the rows of the matrices
+            for i in range(len(self.rowsp)):
+                newRow = []
+                sum = 0
+                for j in range(len(self.rowsp[0])):
+                    # subtract the components of self and other together 
+                    sum = self.rowsp[i][j] - other.rowsp[i][j]
+                    newRow.append(sum)
+                newRowSp.append(newRow)
+        return Matrix(newRowSp)
     
     def __mul__(self, other):  
+        """
+        Overrides * operation
+        Implementation of MATRIX-SCALAR, MATRIX-MATRIX, and MATRIX-VECTOR Multiplication
+        """
         if type(other) == float or type(other) == int:
             print("FIXME: Insert implementation of MATRIX-SCALAR multiplication")
-            # # we know that mxn and nxp is valid.... so we should check there sizes first?
             # loop
                 # for every item in the row space and rows, multiply each component by the other
                 # then add that new component to a new row space 
             # update the new matrix that uses the new row space created
-            # update colsp
         elif type(other) == Matrix:
-            print("FIXME: Insert implementation of MATRIX-MATRIX multiplication") 
-            # we know that mxn and nxp is valid.... so we should check there sizes first?
-            # loop
-                # assuming the product is defined, we can use the rows of A and the columns of B - dot product (from Vec)
-                # after we get each component for a row, we add it to the new rowspace
-            # update colsp
+            # we know that mxn and nxp is valid.... so we should check their sizes first?
+            if len(self.colsp) != len(other.rowsp):
+                raise ValueError("ERROR: Product is undefined.")
+            else:
+                newRowSp = []
+                for i in range(len(self.rowsp)):
+                    newRow = []
+                    for j in range(len(other.colsp[0])):
+                        # we can use the rows of A and the columns of B - dot product from Vec
+                        product = Vec(self.rowsp[i]) * Vec(other.colsp[j])
+                        newRow.append(product)
+                    # after we get each component for a row, we add it to the new rowspace
+                    newRowSp.append(newRow)
+                return Matrix(newRowSp)
         elif type(other) == Vec:
-            print("FIXME: Insert implementation for MATRIX-VECTOR multiplication")
-            # make sure they're valid?
-            # loop
-                # dot product each row with the vector (create new row)
-                # then add the new row to the new row space
-            # update colsp
+            if len(self.colsp) != len(other.elements):
+                raise ValueError("ERROR: Incompatible dimensions.")
+            else:
+                newVec = []
+                for i in range(len(self.rowsp)):
+                    # dot product other and i-th row of self
+                    product = Vec(self.rowsp[i]) * other
+                    # add the new row to the new row space
+                    newVec.append(product)
+            return newVec
         else:
             print("ERROR: Unsupported Type.")
         return
     
-    def __rmul__(self, other):  
+    def __rmul__(self, other):
+        """
+        Implementation of scalar=matrix multiplication
+        """
         if type(other) == float or type(other) == int:
             print("FIXME: Insert implementation of SCALAR-MATRIX multiplication")  # todo
         else:
@@ -117,11 +162,18 @@ class Matrix:
         """returns the list of vectors that make up the row space of the matrix object"""
         return self.rowsp
 
-    def get_diag(self, k): # this one is yikes
+    def get_diag(self, k): 
         """returns diagonal of a matrix. If k = 0, then the original diagonal is returned. 
         If k > 0, then returns diagonal starting at A 1(k+1)
         If k < 0, then returns diagonal starting at A (-k+1)1"""
-        pass
+        diagonal = []
+        if k >= 0:
+            for i in range(min(len(self.rowsp), len(self.rowsp[0]) - k)):
+                diagonal.append(self.rowsp[i][i + k])
+        else:
+            for i in range(min(len(self.rowsp)+k, len(self.rowsp[0]))):
+                diagonal.append(self.rowsp[i + abs(k)][i])
+        return diagonal
 
     def __str__(self):
         """prints the rows and columns in matrix form """
@@ -144,5 +196,39 @@ class Matrix:
 """TESTER CELL"""
 
 A = Matrix([[1, 2, 3], [4, 5, 6]]) 
-print("The setters and getters work as expected.")
+print("\nThe setters and getters work as expected.")
+print("get_diag() works as expected.")
+print("Addition and substraction work as expected.\n")
+
+
+"TESTING OPERATOR + "
+A = Matrix([[1, 2],[3, 4],[5, 6]])
+B = Matrix([[1, 2],[1, 2]])
+C = Matrix([[10, 20],[30, 40],[50, 60]])
+# P = A + B # dimension mismatch --> raises error as intended
+Q = A + C
+R = A - C
+
+
+"TESTING OPERATOR * "
+# TESTING SCALAR-MATRIX MULTIPLICATION
+T = -0.5 * B 
+print("Matrix B") 
+print(B)
 print()
+
+print("Matrix T = -0.5 * B")
+print(T)
+print()
+
+# TESTING MATRIX-MATRIX MULTIPLICATION
+U = A * B
+print("Matrix U = A * B") 
+print(U)
+print()
+
+# TESTING MATRIX-VECTOR MULTIPLICATION 
+x = Vec([0, 1]) # Vec object
+b = A * x # b is a Vec data type 
+print("Vector b = A * x")
+print(b)
