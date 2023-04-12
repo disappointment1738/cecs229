@@ -60,11 +60,18 @@ class Matrix:
         Implementation of MATRIX-SCALAR, MATRIX-MATRIX, and MATRIX-VECTOR Multiplication
         """
         if type(other) == float or type(other) == int:
-            print("FIXME: Insert implementation of MATRIX-SCALAR multiplication")
-            # loop
-                # for every item in the row space and rows, multiply each component by the other
-                # then add that new component to a new row space 
-            # update the new matrix that uses the new row space created
+            newRowSp = []
+            for i in range(len(self.rowsp)):
+                newRow = []
+                product = 0
+                for j in range(len(self.rowsp[0])):
+                    # multiply each component by the scalar
+                    product = self.rowsp[i][j] * other
+                    # add that new product to new row
+                    newRow.append(product)
+                # add that new row to new row space 
+                newRowSp.append(newRow)
+            return Matrix(newRowSp)
         elif type(other) == Matrix:
             # we know that mxn and nxp is valid.... so we should check their sizes first?
             if len(self.colsp) != len(other.rowsp):
@@ -100,7 +107,18 @@ class Matrix:
         Implementation of scalar=matrix multiplication
         """
         if type(other) == float or type(other) == int:
-            print("FIXME: Insert implementation of SCALAR-MATRIX multiplication")  # todo
+            newRowSp = []
+            for i in range(len(self.rowsp)):
+                newRow = []
+                product = 0
+                for j in range(len(self.rowsp[0])):
+                    # multiply each component by the scalar
+                    product = self.rowsp[i][j] * other
+                    # add that new product to new row
+                    newRow.append(product)
+                # add that new row to new row space 
+                newRowSp.append(newRow)
+            return Matrix(newRowSp)
         else:
             print("ERROR: Unsupported Type.")
         return
@@ -201,34 +219,34 @@ print("get_diag() works as expected.")
 print("Addition and substraction work as expected.\n")
 
 
-"TESTING OPERATOR + "
-A = Matrix([[1, 2],[3, 4],[5, 6]])
-B = Matrix([[1, 2],[1, 2]])
-C = Matrix([[10, 20],[30, 40],[50, 60]])
-# P = A + B # dimension mismatch --> raises error as intended
-Q = A + C
-R = A - C
+# "TESTING OPERATOR + "
+# A = Matrix([[1, 2],[3, 4],[5, 6]])
+# B = Matrix([[1, 2],[1, 2]])
+# C = Matrix([[10, 20],[30, 40],[50, 60]])
+# # P = A + B # dimension mismatch --> raises error as intended
+# Q = A + C
+# R = A - C
 
 
-"TESTING OPERATOR * "
-# TESTING SCALAR-MATRIX MULTIPLICATION
-T = -0.5 * B 
-print("Matrix B") 
-print(B)
-print()
+# "TESTING OPERATOR * "
+# # TESTING SCALAR-MATRIX MULTIPLICATION
+# T = -0.5 * B 
+# print("Matrix B") 
+# print(B)
+# print()
 
-print("Matrix T = -0.5 * B")
-print(T)
-print()
+# print("Matrix T = -0.5 * B")
+# print(T)
+# print()
 
-# TESTING MATRIX-MATRIX MULTIPLICATION
-U = A * B
-print("Matrix U = A * B") 
-print(U)
-print()
+# # TESTING MATRIX-MATRIX MULTIPLICATION
+# U = A * B
+# print("Matrix U = A * B") 
+# print(U)
+# print()
 
-# TESTING MATRIX-VECTOR MULTIPLICATION 
-x = Vec([0, 1]) # Vec object
-b = A * x # b is a Vec data type 
-print("Vector b = A * x")
-print(b)
+# # TESTING MATRIX-VECTOR MULTIPLICATION 
+# x = Vec([0, 1]) # Vec object
+# b = A * x # b is a Vec data type 
+# print("Vector b = A * x")
+# print(b)
