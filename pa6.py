@@ -335,7 +335,7 @@ def is_independent(S):
     """Returns True if set S of V is linearly indep. Otherwise returns False"""
     # each vector in S is a column of the matrix
     # true if the solution is unique and not the zero vector
-    # use gauss_colve
+    # use gauss_solve
     # if type is Vec and all elements are 0, return True
     # if type isn't a a Vec or has a nonzero element, return False
     pass
@@ -349,4 +349,22 @@ def gram_schmidt(S):
     # check precondition
     if not is_independent(S):
         raise ValueError("Invalid set of vectors.")
-    pass
+    # assigment variables
+    uSet = set()
+    wSet = set()
+    w1 = S[0]
+    u1 = w1 / w1.norm(2)
+    uSet.add(u1)
+    # compute the other vectors
+    for i in range(1, len(S)):
+        wS = Vec()
+        # summation thingy
+        for j in range(2, len(S)-1):
+            wS = Vec()
+        w = S[i-1] - wS
+        wSet.add(w)
+    # normalise all of the w vectors
+    for i in range(len(wSet)):
+        u = wSet[i] / wSet[i].norm(2)
+        uSet.add(u)
+    return uSet
