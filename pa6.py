@@ -84,8 +84,20 @@ class Vec:
         for element in self.elements:
             product.append(other * element) # mult. other and element, then add to list
         product = Vec(product) # convert array to Vec object?
-        return produc
+        return product
     
+    # added methods go here
+    def norm(self, p: int) -> float:
+        """Finds the L-p norm of a vector"""
+        # create temp/result variable 
+        result = 0.0
+        # add and apply p power to every component
+        for elm in self.elements:
+            num = abs(elm) ** p # apply the power of p to the (positive) component
+            result += num # add to the result
+        result = result ** (1/p) # apply 1/p power to the added components
+        return result
+
     def __str__(self):
         """returns string representation of this Vec object"""
         return str(self.elements) # does NOT need further implementation
@@ -279,6 +291,15 @@ class Matrix:
                 diagonal.append(self.rowsp[i + abs(k)][i])
         return diagonal
 
+    # added methods go here
+    def ref(self):
+        """Applies Gaussian Elimination to a matrix. Returns matrix object"""
+        pass
+
+    def rank(self):
+        """returns the rank of A"""
+        pass
+
     def __str__(self):
         """prints the rows and columns in matrix form """
         mat_str = ""
@@ -298,15 +319,34 @@ class Matrix:
 
 # problem 2
 def gauss_solve(A, b):
-    # todo
+    """
+    Solves system Ax = b.
+    If the system has a unique solution, it returns the solution as a Vec object.
+    If the system has no solution, it returns None.
+    If the system has infinitely many solutions, it returns the number of free variables (int) in the solution.
+    """
+    # apply gaussian elimination (use ref())
+    # track positions of pivots (or keep track of them by using int)
+    # check if cases as above
     pass
 
 # problem 3
 def is_independent(S): 
-    #todo
+    """Returns True if set S of V is linearly indep. Otherwise returns False"""
+    # each vector in S is a column of the matrix
+    # true if the solution is unique and not the zero vector
+    # use gauss_colve
+    # if type is Vec and all elements are 0, return True
+    # if type isn't a a Vec or has a nonzero element, return False
     pass
 
 # problem 4
 def gram_schmidt(S): 
-    # todo
+    """
+    Applies Gram-Schmidt process to create an orthogonal set of vectors. 
+    Raise ValueError when set is not linearly indep.
+    """
+    # check precondition
+    if not is_independent(S):
+        raise ValueError("Invalid set of vectors.")
     pass
