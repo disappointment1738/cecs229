@@ -1,5 +1,7 @@
 # problem 1, copy and paste Vec and Matrix classes, then add the needed methods.
 """Vector class"""
+import numpy as np
+import sys
 class Vec:
     def __init__(self, contents = []):
         """
@@ -294,11 +296,32 @@ class Matrix:
     # added methods go here
     def ref(self):
         """Applies Gaussian Elimination to a matrix. Returns matrix object"""
-        pass
+        a = self.row_space()
+        a = a.list()
+        n = len(a.col_space()[0]) # num of supposed unknown variables 
+        # turn matrix into a upper triangular matrix
+        for i in range(n):
+            if a[i][i] == 0:
+                raise ZeroDivisionError
+            for j in range(i + 1, n):
+                ratio = a[j][i] / a[i][i]
+                for k in range(n + 1):
+                    a[j][k] = a[j][k] - ratio * a[i][k]
+        return Matrix(a)
 
     def rank(self):
         """returns the rank of A"""
-        pass
+        if type(self) != Matrix:
+            raise ValueError
+        matrix = self.ref()
+        n = len(matrix.row_space())
+        rank = 0
+        for vec in matrix.row_space():
+            if vec is all(0): # a zero vector
+                pass
+            else:
+                rank += 1
+        return rank
 
     def __str__(self):
         """prints the rows and columns in matrix form """
@@ -325,17 +348,31 @@ def gauss_solve(A, b):
     If the system has no solution, it returns None.
     If the system has infinitely many solutions, it returns the number of free variables (int) in the solution.
     """
+    # make augmented matrix, Ab
+    Ab = Matrix(np.concatenate(A, b.T, axis = '1'))
     # apply gaussian elimination (use ref())
-    # track positions of pivots (or keep track of them by using int)
-    # check if cases as above
-    pass
+    Ab.ref()
+    # track positions of pivots (or keep track of them by using int) --> no of free is same as num of zero rows
+    pivots = Ab.rank() 
+    col = len(Ab.col_space())
+    n = len(Ab.row_space())
+    # if system has num of pivots = num of columns, then it is unique
+    if pivots == col:
+        for k in range(n - 2, -1, -1):
+            pass
+    # if system has num of pivots < num of columns, then it returns num of free variables (num of col - num of pivots)
+    elif pivots < col:
+        pass
+    # if system is inconsistent, etc. returns None
+    else:
+        return None
 
 # problem 3
 def is_independent(S): 
     """Returns True if set S of V is linearly indep. Otherwise returns False"""
     # each vector in S is a column of the matrix
     # true if the solution is unique and not the zero vector
-    # use gauss_solve
+    # use gauss_solve()
     # if type is Vec and all elements are 0, return True
     # if type isn't a a Vec or has a nonzero element, return False
     pass
