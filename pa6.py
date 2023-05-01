@@ -297,8 +297,7 @@ class Matrix:
     def ref(self):
         """Applies Gaussian Elimination to a matrix. Returns matrix object"""
         a = self.row_space()
-        a = a.list()
-        n = len(a.col_space()[0]) # num of supposed unknown variables 
+        n = len(a[0]) # num of supposed unknown variables 
         # turn matrix into a upper triangular matrix
         for i in range(n):
             if a[i][i] == 0:
@@ -349,7 +348,7 @@ def gauss_solve(A, b):
     If the system has infinitely many solutions, it returns the number of free variables (int) in the solution.
     """
     # make augmented matrix, Ab
-    Ab = Matrix(np.concatenate(A, b.T, axis = '1'))
+    Ab = Matrix(np.concatenate(A, b, axis = '1'))
     # apply gaussian elimination (use ref())
     Ab.ref()
     # track positions of pivots (or keep track of them by using int) --> no of free is same as num of zero rows
