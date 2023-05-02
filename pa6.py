@@ -114,7 +114,7 @@ class Matrix:
         
     def _construct_cols(self, rowsp):
         colsp = []
-        for i in range(len(rowsp[0].elements)):
+        for i in range(len(rowsp[0])):
             col = []
             for j in range(len(rowsp)):
                 col.append(rowsp[j][i])
