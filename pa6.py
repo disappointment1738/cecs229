@@ -91,14 +91,14 @@ class Vec:
     
     # add for gram-schmidt cuz code post is being annoying again
     def __truediv__(self, other):
-        if type(other) != int or type(other) != float:
+        """
+        Overloads the / operator to support vector/scalar division
+        """
+        if isinstance(other, (int, float)):
+            quotient = [elm / other for elm in self.elements]
+            return Vec(quotient)
+        else:
             raise TypeError
-        quotient = []
-        # divide each component of vec by other (float or int)
-        for element in self.elements:
-            quotient.append(element / other) # divide other and element, then add to list
-        quotient = Vec(quotient) # convert array to Vec object?
-        return quotient
 
     # added methods go here
     def norm(self, p: int) -> float:
@@ -433,6 +433,6 @@ def gram_schmidt(S):
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):
-        u = wSet[i] / wSet[i].norm(2)
+        u = (1/wSet[i].norm(2)) * wSet[i]
         uSet.add(u)
     return uSet
