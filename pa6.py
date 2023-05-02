@@ -98,7 +98,7 @@ class Vec:
             quotient = [elm / other for elm in self.elements]
             return Vec(quotient)
         else:
-            raise TypeError
+            raise TypeError(f"unsupported operand type(s) for /: 'Vec' and '{type(other)}'")
 
     # added methods go here
     def norm(self, p: int) -> float:
@@ -421,6 +421,7 @@ def gram_schmidt(S):
     # assigment variables
     uSet = set()
     wSet = set()
+    S = list(S)
     # step 1
     w1 = S[0]
     u1 = w1 / w1.norm(2)
@@ -429,10 +430,10 @@ def gram_schmidt(S):
     # compute the other vectors (step 2-n)
     for i in range(2, n):
         # summation thingy
-        w = Vec(S[i-1]) - ( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k])*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(1, i-1))
+        w = Vec(S[i-1]) - Vec(( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k])*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(1, i-1)))
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):
-        u = (1/wSet[i].norm(2)) * wSet[i]
+        u = wSet[i] / wSet[i].norm(2)
         uSet.add(u)
     return uSet
