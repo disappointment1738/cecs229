@@ -1,7 +1,5 @@
 # problem 1, copy and paste Vec and Matrix classes, then add the needed methods.
 """Vector class"""
-import traceback
-
 
 class Vec:
     def __init__(self, contents = []):
