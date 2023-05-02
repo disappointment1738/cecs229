@@ -321,8 +321,7 @@ class Matrix:
             # break out of the loop
             if rowPivot == m:
                 break
-            matrix = Matrix(rowsp)
-            matrix.colsp = matrix._construct_cols(rowsp)
+        matrix = Matrix(rowsp)
         return matrix
 
     def rank(self):
@@ -373,7 +372,7 @@ def gauss_solve(A, b):
     #         pass
     # # if system has num of pivots < num of columns, then it returns num of free variables (num of col - num of pivots)
     # elif pivots < col:
-    #     pass
+    #     return "Infinitely-many solutions with " + str(free) + " free variables."
     # # if system is inconsistent, etc. returns None
     # else:
     #     return None
