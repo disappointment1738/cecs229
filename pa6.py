@@ -379,12 +379,18 @@ def gauss_solve(A, b):
 # problem 3
 def is_independent(S): 
     """Returns True if set S of V is linearly indep. Otherwise returns False"""
-    # each vector in S is a column of the matrix
-    # true if the solution is unique and not the zero vector
-    # use gauss_solve()
-    # if type is Vec and all elements are 0, return True
-    # if type isn't a a Vec or has a nonzero element, return False
-    pass
+    # precodition? check if set is empty or has only 1 element
+    if len(S) <= 1:
+        return True
+    # create a matrix from S
+    matrix = Matrix(list(S))
+    rank = matrix.rank() # get rank of matrix
+    indep = False
+    # by def, if the rank is the same as the num of rows/cols, 
+    # then the columns of matrix "matrix" are linearly indep.
+    if rank == len(S):
+        indep = True
+    return indep
 
 # problem 4
 def gram_schmidt(S): 
@@ -392,46 +398,26 @@ def gram_schmidt(S):
     Applies Gram-Schmidt process to create an orthogonal set of vectors. 
     Raise ValueError when set is not linearly indep.
     """
-    # # check precondition
-    # if not is_independent(S):
-    #     raise ValueError("Invalid set of vectors.")
-    # # assigment variables
-    # uSet = set()
-    # wSet = set()
-    # w1 = S[0]
-    # u1 = w1 / w1.norm(2)
-    # uSet.add(u1)
-    # # compute the other vectors
-    # for i in range(1, len(S)):
-    #     wS = Vec()
-    #     # summation thingy
-    #     for j in range(2, len(S)-1):
-    #         wS = Vec()
-    #     w = S[i-1] - wS
-    #     wSet.add(w)
-    # # normalise all of the w vectors
-    # for i in range(len(wSet)):
-    #     u = wSet[i] / wSet[i].norm(2)
-    #     uSet.add(u)
-    # return uSet
+    # check precondition
+    if not is_independent(S):
+        raise ValueError("Invalid set of vectors.")
+    # assigment variables
+    uSet = set()
+    wSet = set()
+    w1 = S[0]
+    u1 = w1 / w1.norm(2)
+    uSet.add(u1)
+    # compute the other vectors
+    for i in range(1, len(S)):
+        wS = Vec()
+        # summation thingy
+        for j in range(2, len(S)-1):
+            wS = Vec()
+        w = S[i-1] - wS
+        wSet.add(w)
+    # normalise all of the w vectors
+    for i in range(len(wSet)):
+        u = wSet[i] / wSet[i].norm(2)
+        uSet.add(u)
+    return uSet
     pass
-
-A = Matrix([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
-print(A)
-print("Rank:", A.rank(), "\nExpected: 2\n")
-
-B = Matrix([[1, 2], [-1, -2]])
-print(B)
-print("Rank:", B.rank(), "\nExpected: 1\n")
-
-C = Matrix([[0, -1, 5], [2, 4, -6], [1, 1, 5]])
-print(C)
-print("Rank:", C.rank(), "\nExpected: 3\n")
-
-D = Matrix([[5, 3, 0], [1, 2, -4], [-2, -4, 8]])
-print(D)
-print("Rank:", D.rank(), "\nExpected: 2\n")
-
-E = Matrix([[1, 2, -1, 3], [2, 4, 1, -2], [3, 6, 3, -7]])
-print(E)
-print("Rank:", E.rank(), "\nExpected: 2")
