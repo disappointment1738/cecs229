@@ -1,5 +1,8 @@
 # problem 1, copy and paste Vec and Matrix classes, then add the needed methods.
 """Vector class"""
+import traceback
+
+
 class Vec:
     def __init__(self, contents = []):
         """
@@ -400,24 +403,21 @@ def gram_schmidt(S):
     """
     # check precondition
     if not is_independent(S):
-        raise ValueError("Invalid set of vectors.")
+        raise ValueError("Set of vectors are not indpendent.")
     # assigment variables
     uSet = set()
     wSet = set()
     w1 = S[0]
     u1 = w1 / w1.norm(2)
     uSet.add(u1)
+    n = len(S)
     # compute the other vectors
-    for i in range(1, len(S)):
-        wS = Vec()
+    for i in range(1, n):
         # summation thingy
-        for j in range(2, len(S)-1):
-            wS = Vec()
-        w = S[i-1] - wS
+        w = Vec(S[i-1]) - ( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k])*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(2, n-1))
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):
         u = wSet[i] / wSet[i].norm(2)
         uSet.add(u)
     return uSet
-    pass
