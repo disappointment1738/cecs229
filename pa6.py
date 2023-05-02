@@ -422,6 +422,6 @@ def gram_schmidt(S):
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):
-        u = wSet[i] * (1/wSet[i].norm(2))
+        u = (1 / wSet[i].norm(2)) * wSet[i]
         uSet.add(u)
     return uSet
