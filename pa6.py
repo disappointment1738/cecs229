@@ -89,6 +89,17 @@ class Vec:
         product = Vec(product) # convert array to Vec object?
         return product
     
+    # add for gram-schmidt cuz code post is being annoying again
+    def __truediv__(self, other):
+        if type(other) != int or type(other) != float:
+            raise TypeError
+        quotient = []
+        # divide each component of vec by other (float or int)
+        for element in self.elements:
+            quotient.append(element / other) # divide other and element, then add to list
+        quotient = Vec(quotient) # convert array to Vec object?
+        return quotient
+
     # added methods go here
     def norm(self, p: int) -> float:
         """Finds the L-p norm of a vector"""
@@ -422,6 +433,6 @@ def gram_schmidt(S):
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):
-        u = (1 / wSet[i].norm(2)) * wSet[i]
+        u = wSet[i] / wSet[i].norm(2)
         uSet.add(u)
     return uSet
