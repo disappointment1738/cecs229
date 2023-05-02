@@ -1,7 +1,5 @@
 # problem 1, copy and paste Vec and Matrix classes, then add the needed methods.
 """Vector class"""
-import numpy as np
-import sys
 class Vec:
     def __init__(self, contents = []):
         """
@@ -296,29 +294,40 @@ class Matrix:
     # added methods go here
     def ref(self):
         """Applies Gaussian Elimination to a matrix. Returns matrix object"""
-        a = self.row_space()
-        n = len(a[0]) # num of supposed unknown variables 
-        # turn matrix into a upper triangular matrix
-        for i in range(n):
-            if a[i][i] == 0:
-                raise ZeroDivisionError
-            for j in range(i + 1, n):
-                ratio = a[j][i] / a[i][i]
-                for k in range(n + 1):
-                    a[j][k] = a[j][k] - ratio * a[i][k]
-        return Matrix(a)
+        # make new copy of the matrix
+        rowsp = [list(row) for row in self.rowsp]
+        m = len(rowsp) # num of rows
+        n = len(rowsp[0]) # num of cols
+        rowPivot = 0
+        # make the matrix into a upper triangular matrix
+        for j in range(n):
+            # find the first nonzero entry in the j-th column below the pivot row
+            for i in range(rowPivot, m):
+                if rowsp[i][j] != 0:
+                    # swap the pivot row and the first nonzero row
+                    rowsp[rowPivot], rowsp[i] = rowsp[i], rowsp[rowPivot]
+                    break
+            # make all of the entries below the pivot zero
+            for i in range(rowPivot + 1, m):
+                if rowsp[i][j] != 0:
+                    ratio = rowsp[i][j] / rowsp[rowPivot][j]
+                    # the formula for making the entries zero in the j-th column
+                    rowsp[i] = [rowsp[i][k] - ratio*rowsp[rowPivot][k] for k in range(n)]
+            # move pivot to next row
+            rowPivot += 1
+            # break out of the loop
+            if rowPivot == m:
+                break
+            matrix = Matrix(rowsp)
+            matrix.colsp = matrix._construct_cols(rowsp)
+        return matrix
 
     def rank(self):
         """returns the rank of A"""
-        if type(self) != Matrix:
-            raise ValueError
         matrix = self.ref()
-        n = len(matrix.row_space())
         rank = 0
-        for vec in matrix.row_space():
-            if vec is all(0): # a zero vector
-                pass
-            else:
+        for row in matrix.rowsp:
+            if any(row): # a zero vector
                 rank += 1
         return rank
 
@@ -347,24 +356,25 @@ def gauss_solve(A, b):
     If the system has no solution, it returns None.
     If the system has infinitely many solutions, it returns the number of free variables (int) in the solution.
     """
-    # make augmented matrix, Ab
-    Ab = Matrix(np.concatenate(A, b, axis = '1'))
-    # apply gaussian elimination (use ref())
-    Ab.ref()
-    # track positions of pivots (or keep track of them by using int) --> no of free is same as num of zero rows
-    pivots = Ab.rank() 
-    col = len(Ab.col_space())
-    n = len(Ab.row_space())
-    # if system has num of pivots = num of columns, then it is unique
-    if pivots == col:
-        for k in range(n - 2, -1, -1):
-            pass
-    # if system has num of pivots < num of columns, then it returns num of free variables (num of col - num of pivots)
-    elif pivots < col:
-        pass
-    # if system is inconsistent, etc. returns None
-    else:
-        return None
+    # # make augmented matrix, Ab
+    # Ab = Matrix(np.concatenate(A, b, axis = '1'))
+    # # apply gaussian elimination (use ref())
+    # Ab.ref()
+    # # track positions of pivots (or keep track of them by using int) --> no of free is same as num of zero rows
+    # pivots = Ab.rank() 
+    # col = len(Ab.col_space())
+    # n = len(Ab.row_space())
+    # # if system has num of pivots = num of columns, then it is unique
+    # if pivots == col:
+    #     for k in range(n - 2, -1, -1):
+    #         pass
+    # # if system has num of pivots < num of columns, then it returns num of free variables (num of col - num of pivots)
+    # elif pivots < col:
+    #     pass
+    # # if system is inconsistent, etc. returns None
+    # else:
+    #     return None
+    pass
 
 # problem 3
 def is_independent(S): 
@@ -382,25 +392,46 @@ def gram_schmidt(S):
     Applies Gram-Schmidt process to create an orthogonal set of vectors. 
     Raise ValueError when set is not linearly indep.
     """
-    # check precondition
-    if not is_independent(S):
-        raise ValueError("Invalid set of vectors.")
-    # assigment variables
-    uSet = set()
-    wSet = set()
-    w1 = S[0]
-    u1 = w1 / w1.norm(2)
-    uSet.add(u1)
-    # compute the other vectors
-    for i in range(1, len(S)):
-        wS = Vec()
-        # summation thingy
-        for j in range(2, len(S)-1):
-            wS = Vec()
-        w = S[i-1] - wS
-        wSet.add(w)
-    # normalise all of the w vectors
-    for i in range(len(wSet)):
-        u = wSet[i] / wSet[i].norm(2)
-        uSet.add(u)
-    return uSet
+    # # check precondition
+    # if not is_independent(S):
+    #     raise ValueError("Invalid set of vectors.")
+    # # assigment variables
+    # uSet = set()
+    # wSet = set()
+    # w1 = S[0]
+    # u1 = w1 / w1.norm(2)
+    # uSet.add(u1)
+    # # compute the other vectors
+    # for i in range(1, len(S)):
+    #     wS = Vec()
+    #     # summation thingy
+    #     for j in range(2, len(S)-1):
+    #         wS = Vec()
+    #     w = S[i-1] - wS
+    #     wSet.add(w)
+    # # normalise all of the w vectors
+    # for i in range(len(wSet)):
+    #     u = wSet[i] / wSet[i].norm(2)
+    #     uSet.add(u)
+    # return uSet
+    pass
+
+A = Matrix([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
+print(A)
+print("Rank:", A.rank(), "\nExpected: 2\n")
+
+B = Matrix([[1, 2], [-1, -2]])
+print(B)
+print("Rank:", B.rank(), "\nExpected: 1\n")
+
+C = Matrix([[0, -1, 5], [2, 4, -6], [1, 1, 5]])
+print(C)
+print("Rank:", C.rank(), "\nExpected: 3\n")
+
+D = Matrix([[5, 3, 0], [1, 2, -4], [-2, -4, 8]])
+print(D)
+print("Rank:", D.rank(), "\nExpected: 2\n")
+
+E = Matrix([[1, 2, -1, 3], [2, 4, 1, -2], [3, 6, 3, -7]])
+print(E)
+print("Rank:", E.rank(), "\nExpected: 2")
