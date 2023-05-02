@@ -385,12 +385,16 @@ def is_independent(S):
     if len(S) <= 1:
         return True
     # create a matrix from S
-    matrix = Matrix(list(S))
+    s = []
+    # make vecs lists
+    for vec in S:
+        s.append(vec.elements)
+    matrix = Matrix(s)
     rank = matrix.rank() # get rank of matrix
     indep = False
     # by def, if the rank is the same as the num of rows/cols, 
     # then the columns of matrix "matrix" are linearly indep.
-    if rank == len(S):
+    if rank == len(s):
         indep = True
     return indep
 
