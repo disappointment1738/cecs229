@@ -114,7 +114,7 @@ class Matrix:
         
     def _construct_cols(self, rowsp):
         colsp = []
-        for i in range(len(rowsp[0])):
+        for i in range(len(list(rowsp[0]))):
             col = []
             for j in range(len(rowsp)):
                 col.append(rowsp[j][i])
@@ -406,17 +406,18 @@ def gram_schmidt(S):
     # assigment variables
     uSet = set()
     wSet = set()
+    # step 1
     w1 = S[0]
     u1 = w1 / w1.norm(2)
     uSet.add(u1)
     n = len(S)
-    # compute the other vectors
-    for i in range(1, n):
+    # compute the other vectors (step 2-n)
+    for i in range(2, n):
         # summation thingy
-        w = Vec(S[i-1]) - ( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k])*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(2, n-1))
+        w = Vec(S[i-1]) - ( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k])*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(1, i-1))
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):
-        u = wSet[i] / wSet[i].norm(2)
+        u = wSet[i] * (1/wSet[i].norm(2))
         uSet.add(u)
     return uSet
