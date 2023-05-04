@@ -1,5 +1,5 @@
 import pa6
-from random import randintd
+from random import randint
 
 def solve_QR(A, b):
     # todo

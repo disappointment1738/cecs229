@@ -419,7 +419,6 @@ def gram_schmidt(S):
     # assigment variables
     uSet = set()
     wSet = set()
-    S = list(S)
     # step 1
     w1 = S[0]
     u1 = w1 / w1.norm(2)
@@ -435,3 +434,15 @@ def gram_schmidt(S):
         u = wSet[i] / wSet[i].norm(2)
         uSet.add(u)
     return uSet
+
+# tester for Gram-Schmidt
+S = {Vec(1, -1), Vec(0, 2)}
+T = gram_schmidt(S)
+
+str_T = "{"
+for v in T:
+    str_T += str(v) + 'T '
+str_T += "}"
+
+print(str_T)
+print("Expected: {[0.707106, -0.707106]T, [0.707106, 0.707106]T}")
