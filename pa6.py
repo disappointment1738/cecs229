@@ -429,7 +429,7 @@ def gram_schmidt(S):
     # compute the other vectors (step 2-n)
     for i in range(2, n):
         # summation thingy
-        w = Vec(S[i-1]) - Vec(( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k])*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(1, i-1)))
+        w = Vec(S[i-1]) - Vec(( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k]*Vec(uSet[k]))*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(1, i-1)))
         wSet.add(w)
     # normalise all of the w vectors
     for i in range(len(wSet)):

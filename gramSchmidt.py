@@ -416,7 +416,17 @@ def gram_schmidt(S):
     # check precondition
     if not is_independent(S):
         raise ValueError("Set of vectors are not indpendent.")
-    # todo: the other stuff
+    vecs = list(S)
+    n = len(vecs)
+    orthodonist = []
+    for i in range(1, n):
+        w = vecs[i] / vecs[i].norm(2)
+        for j in range(i+1, n):
+            v = vecs[j]
+            v = v - ((v*v/w*w) * w)
+            orthodonist.add(v)
+    orthodonist = set(orthodonist)
+    return orthodonist
 
 # tester for Gram-Schmidt
 S = {Vec([1, -1]), Vec([0, 2])}
