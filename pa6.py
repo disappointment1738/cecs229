@@ -87,7 +87,7 @@ class Vec:
         product = Vec(product) # convert array to Vec object?
         return product
     
-    # add for gram-schmidt cuz code post is being annoying again
+    # added for gram-schmidt
     def __truediv__(self, other):
         """
         Overloads the / operator to support vector/scalar division
@@ -419,6 +419,8 @@ def gram_schmidt(S):
     # assigment variables
     uSet = set()
     wSet = set()
+    # make S a set
+    S = list(S)
     # step 1
     w1 = S[0]
     u1 = w1 / w1.norm(2)
@@ -436,7 +438,7 @@ def gram_schmidt(S):
     return uSet
 
 # tester for Gram-Schmidt
-S = {Vec(1, -1), Vec(0, 2)}
+S = {Vec([1, -1]), Vec([0, 2])}
 T = gram_schmidt(S)
 
 str_T = "{"
