@@ -416,17 +416,36 @@ def gram_schmidt(S):
     # check precondition
     if not is_independent(S):
         raise ValueError("Set of vectors are not indpendent.")
-    vecs = list(S)
-    n = len(vecs)
-    orthodonist = []
-    for i in range(1, n):
-        w = vecs[i] / vecs[i].norm(2)
-        for j in range(i+1, n):
-            v = vecs[j]
-            v = v - ((v*v/w*w) * w)
-            orthodonist.add(v)
-    orthodonist = set(orthodonist)
-    return orthodonist
+    x = list(S) # x
+    vecs = [x]
+    w = [] # orthogonal "set"
+    u = [] # orthonormal "set"
+    # step 1
+    w = S[0]
+    w.append(w)
+    # steps 2, ... , n where n is len(S)
+    for i in range(len(S)):
+        proj = 0.0
+        sumProj = 0.0
+        for j in range(len(x[i])):
+            # compute the vector multiplication x[i] * w[j], save this to a variable
+            dot = x[i] * w[j]
+            # then find the norm of w[j]. use norm(w[j],2), then square it.
+            norm = w[j].norm(2)
+            # then divide the vector multiplication result by the calculated norm
+            scalar = dot / norm
+            # then multiply that by w[j] itself
+            proj = scalar * w[j]
+            # and finally subtract this value from w[i]
+            w[i] = w[i] - proj
+        w.append(w[i])
+    # normalise the orthogonal vectors
+    for vec in w:
+        norm = vec.norm(2)
+        # get the elements of orthogonal vector then divide the elements by the norm
+        for i in range(len(vec.elements)):
+            vec[i] = vec[i] / norm
+            u.append()
 
 # tester for Gram-Schmidt
 S = {Vec([1, -1]), Vec([0, 2])}

@@ -416,26 +416,38 @@ def gram_schmidt(S):
     # check precondition
     if not is_independent(S):
         raise ValueError("Set of vectors are not indpendent.")
-    # assigment variables
-    uSet = set()
-    wSet = set()
-    # make S a set
-    S = list(S)
-    # step 1
-    w1 = S[0]
-    u1 = w1 / w1.norm(2)
-    uSet.add(u1)
-    n = len(S)
-    # compute the other vectors (step 2-n)
-    for i in range(2, n):
-        # summation thingy
-        w = Vec(S[i-1]) - Vec(( ( Vec(S[i-1])*Vec(uSet[k])/Vec(uSet[k]*Vec(uSet[k]))*Vec(uSet[k]) )*Vec(S[i-1]) for k in range(1, i-1)))
-        wSet.add(w)
-    # normalise all of the w vectors
-    for i in range(len(wSet)):
-        u = wSet[i] / wSet[i].norm(2)
-        uSet.add(u)
-    return uSet
+    x = list(S) # x
+    vecs = [x]
+    w = [] # orthogonal "set"
+    u = [] # orthonormal "set"
+    # steps 2, ... , n where n is len(S)
+    for i in range(len(S)):
+        w.append(x[i])
+        proj = 0.0
+        if i > 0:
+            for j in range(i):
+                # compute the vector multiplication x[i] * w[j], save this to a variable
+                dot = x[i] * w[j]
+                # then find the norm of w[j]. use norm(w[j],2), then square it.
+                norm = (w[j].norm(2)) ** 2
+                # then divide the vector multiplication result by the calculated norm
+                scalar = dot / norm
+                # then multiply that by w[j] itself
+                proj = scalar * w[j]
+                # and finally subtract this value from w[i]
+                w[i] = w[i] - proj
+    # normalise the orthogonal vectors
+    for vec in w:
+        norm = vec.norm(2)
+        z = [] # temp variable for storage
+        vList = vec.elements
+        # get the elements of orthogonal vector then divide the elements by the norm
+        for i in range(len(vList)):
+            normalisedComp = vList[i] / norm # elm divided by norm
+            z.append(normalisedComp) # adds it to the current "vector"
+        z = Vec(z)
+        u.append(z)
+    return u
 
 # tester for Gram-Schmidt
 S = {Vec([1, -1]), Vec([0, 2])}
