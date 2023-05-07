@@ -2,8 +2,9 @@ import pa6
 from random import randint
 
 def solve_QR(A, b):
+    aSet = set(pa6.Vec(row) for row in A.row_space())
     # create Q
-    u = pa6.gram_schmidt(A)
+    u = pa6.gram_schmidt(aSet) # throws error for A (type matrix has no len), but throws error when I try to use aSet (in construct cols???)
     Q = pa6.Matrix(u)
     R_rowsp = []
 
@@ -13,7 +14,7 @@ def solve_QR(A, b):
         row = []
         for j in range(len(Q.colsp)):
             if i <= j:
-                elm = Q.rowsp[i] * A.rowsp[i] 
+                elm = Q.rowsp[i] * A.rowsp[j] 
             else:
                 elm = 0
             row.append(elm)
@@ -23,7 +24,7 @@ def solve_QR(A, b):
     R = pa6.Matrix(R_rowsp) # nxn matrix
 
     # Transpose Q
-    temp_qT_rowsp = [temp_qT_rowsp.append(row) for row in Q.rowsp]
+    temp_qT_rowsp = Q.rowsp.copy()
     listQT = [temp_qT_rowsp] # temp list
     listQ = [Q.rowsp] 
     qT = []
@@ -33,10 +34,18 @@ def solve_QR(A, b):
         qT.append(pa6.Vec(listQT[i]))
     Q_transpose = pa6.Matrix(qT) # mxn matrix
 
-    # Find inverse of  R
-
-    # Find x
-    x = R_inverse * Q_transpose * b # where b is in Rn
+    # Use backwards substitution to solve R * x = Q_transpose * b
+    n = R.rowsp # num of rows in R
+    x = [0 for i in range(len(n))] # create "vector" of unknowns
+    c = Q_transpose * b # product of matrix-vector mult.
+    cList = [c] 
+    rList = [R.rowsp]
+    for i in range(n-1, -1, -1):
+        s = 0 # temp variable, helps calculate num of remaining unknowns
+        for j in range(i+1, n):
+            s += rList[i][j] * x[j]
+        x[i] = (cList[i]-s) / rList[i][i]
+    x = pa6.Vec(x)
     return x
 
 
