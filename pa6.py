@@ -448,15 +448,3 @@ def gram_schmidt(S):
         z = Vec(z)
         u.append(z)
     return u
-
-# tester for Gram-Schmidt
-S = {Vec([1, -1]), Vec([0, 2])}
-T = gram_schmidt(S)
-
-str_T = "{"
-for v in T:
-    str_T += str(v) + 'T '
-str_T += "}"
-
-print(str_T)
-print("Expected: {[0.707106, -0.707106]T, [0.707106, 0.707106]T}")
