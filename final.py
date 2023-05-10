@@ -5,7 +5,7 @@ def solve_QR(A, b):
     aSet = set(pa6.Vec(row) for row in A.row_space())
     # create Q
     u = pa6.gram_schmidt(aSet) # throws error for A (type matrix has no len), but throws error when I try to use aSet (in construct cols???)
-    Q = pa6.Matrix(u)
+    Q = pa6.Matrix(list(u))
     R_rowsp = []
 
     # Use col(A) and col(Q) to computer R where every elm is <aj, ui>
