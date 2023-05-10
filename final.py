@@ -31,17 +31,18 @@ def solve_QR(A, b):
         for j in range(len(Q.rowsp)):
             row.append(Q.rowsp[j][i])
         QTrowsp.append(row) 
-    Q_transpose = ([row.elements for row in QTrowsp]) # mxn matrix
+    Q_transpose = ([pa6.Vec(row) for row in QTrowsp]) # mxn matrix
 
     # Use backwards substitution to solve R * x = Q_transpose * b
-    n = R.rowsp # num of rows in R
-    x = [0 for i in range(len(n))] # create "vector" of unknowns
+    n = len(R.colsp) # num of col in R
+    x = [0 for i in range(n)] # create "vector" of unknowns
     c = Q_transpose * b # product of matrix-vector mult.
     for i in range(n-1, -1, -1):
         s = 0 # temp variable, helps calculate num of remaining unknowns
-        for j in range(i+1, n):
+        for j in range(i+1, n-1):
             s += R.rowsp[i][j] * x[j]
         x[i] = (c.elements[i]-s) / R.rowsp[i][i]
+    
     x = pa6.Vec(x)
     return x
 
